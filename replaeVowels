@@ -1,0 +1,75 @@
+import edu.duke.*;
+import org.apache.commons.csv.*;
+import java.io.*;
+/**
+ * Write a description of class CaesarCypher here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class CaesarCypher{
+    public String encrypt(String input, int key){
+        StringBuilder encrypted = new StringBuilder(input);
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String shiftedAlphabet = alphabet.substring(key) + alphabet.substring(0,key);
+        for(int i=0; i < encrypted.length(); i++){
+            char currChar = encrypted.charAt(i);
+            int idx = alphabet.indexOf(currChar);
+            if (idx != -1){
+                char newChar = shiftedAlphabet.charAt(idx);
+                encrypted.setCharAt(i, newChar);
+            }
+        }
+        return encrypted.toString();
+    }
+    public void testCaesar(){
+        int key = 17;
+        FileResource fr = new FileResource();
+        String message = fr.asString();
+        String encrypted = encrypt(message, key);
+        System.out.println(encrypted);
+        String decrypted = encrypt(encrypted, 26-key);
+        System.out.println(decrypted);
+    }
+    public boolean isVowel(char ch){
+        if(ch == 'A' || ch == 'E' || ch == 'I' || ch == 'O' || ch == 'U'){
+            return true;
+        }
+        return false;
+    }
+    public void testIsVowel(){
+        System.out.println("Is 'F' a vowel?" + isVowel('F'));
+        System.out.println("is Vowel('a') should return true: " + isVowel('a'));
+    }
+    public String replaceVowels(String phrase, char ch){
+      StringBuilder replaceVowel = new StringBuilder(phrase);
+      for(int i=0; i< replaceVowel.length(); i++){
+          if (isVowel(replaceVowel.charAt(i))){
+              replaceVowel.setCharAt(i, ch);
+          } 
+      }
+      return replaceVowel.toString();
+    }
+    public void testReplaceVowels(){
+      System.out.println(replaceVowels("Hello World", '*'));
+    }
+    public String emphasize(String phrase, char ch){
+        StringBuilder emphasize = new StringBuilder(phrase);
+        for (int i = 0; i < emphasize.length(); i++){
+            if(isVowel(emphasize.charAt(i))){
+               if (emphasize.charAt(i) ==Character.toUpperCase(ch)){
+                   if (i % 2 == 0){
+                       emphasize.setCharAt(i, '*');
+                    }
+                    else {
+                        emphasize.setCharAt(i, '+');
+                   }
+               }
+           }
+        }
+        return emphasize.toString();
+    }
+    public void testEmphasize(){
+      System.out.println(emphasize("Hello World", 'a'));
+    }
+}
